@@ -62,6 +62,9 @@ pipeline {
             steps {
                 script {
                     withCredentials([file(credentialsId: 'gcp_cred', variable: 'GCP_CRED_FILE')]) {
+                        sh 'cp ${GCP_CRED_FILE} /var/jenkins_home/workspace/terrafrom_main/credentials.json'
+                        sh 'ls -l /var/jenkins_home/workspace/terrafrom_main' // Debugging step
+            
                         sh "cp ${GCP_CRED_FILE} credentials.json"
                     }
                 }
