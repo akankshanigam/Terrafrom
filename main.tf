@@ -27,9 +27,6 @@ resource "google_compute_instance" "default" {
     }
   }
 
-  metadata = {
-    ssh-keys = "username:${file("~/.ssh/id_rsa.pub")}"
-  }
 
   service_account {
     scopes = ["compute-ro", "view"]
