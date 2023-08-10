@@ -10,7 +10,7 @@ pipeline {
     stages {
         stage('Install Terraform') {
             when {
-                expression { return true }
+                expression { return fakse }
             }
             steps {
                 script {
@@ -28,7 +28,7 @@ pipeline {
                 expression { return true }
             }
             steps {
-                sh ' rm -rf Terrafrom.git
+                sh  'rm -rf Terrafrom.git'
                 sh 'git clone https://github.com/akankshanigam/Terrafrom.git'
             }
         }
