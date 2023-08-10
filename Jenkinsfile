@@ -53,7 +53,7 @@ pipeline {
             steps {
                 script {
                     withCredentials([file(credentialsId: 'gcp_cred', variable: 'GCP_CRED')]) {
-                        sh "terraform apply -var 'credentials_file=${GCP_CRED}' -auto-approve tfplan"
+                        sh "terraform plan -var 'credentials_file=${GCP_CRED}' -out=tfplan"
                     } // Added closing brace
                 } // Added closing brace
             }
