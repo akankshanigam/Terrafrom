@@ -44,7 +44,20 @@ pipeline {
                 }
             }
         }
-        
+
+                stage('Prepare Credentials') {
+            steps {
+                script {
+                    withCredentials([file(credentialsId: 'gcp_cred', variable: 'GCP_CRED_FILE')]) {
+                        sh 'cp ${GCP_CRED_FILE} /var/jenkins_home/workspace/terrafrom_main/key.json'
+                        sh 'ls -l /var/jenkins_home/workspace/terrafrom_main' // Debugging step
+            
+                        sh "cp ${GCP_CRED_FILE} key.json"
+                    }
+                }
+            }
+        }
+
         stage('Terraform Validate') {
             when {
                 expression { return true }
@@ -58,18 +71,6 @@ pipeline {
             }
         }
 
-        stage('Prepare Credentials') {
-            steps {
-                script {
-                    withCredentials([file(credentialsId: 'gcp_cred', variable: 'GCP_CRED_FILE')]) {
-                        sh 'cp ${GCP_CRED_FILE} /var/jenkins_home/workspace/terrafrom_main/credentials.json'
-                        sh 'ls -l /var/jenkins_home/workspace/terrafrom_main' // Debugging step
-            
-                        sh "cp ${GCP_CRED_FILE} credentials.json"
-                    }
-                }
-            }
-        }
 
         stage('Terraform Apply') {
             when {
