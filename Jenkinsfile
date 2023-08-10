@@ -38,7 +38,8 @@ pipeline {
             }
             steps {
                 script {
-                    sh 'terraform init -backend-config=credentials="$GCP_CRED"'
+                    withCredentials([file(credentialsId: 'gcp_cred', variable: 'GCP_CRED')]) {
+                       sh "terraform plan -var 'credentials_file=${GCP_CRED}' -out=tfplan"
                 }
             }
         }
@@ -49,7 +50,8 @@ pipeline {
             }
             steps {
                 script {
-                   sh "terraform plan -var 'credentials_file=$GCP_CRED' -out=tfplan"
+                   withCredentials([file(credentialsId: 'gcp_cred', variable: 'GCP_CRED')]) {
+                sh "terraform apply -var 'credentials_file=${GCP_CRED}' -auto-approve tfplan"
                 }
             }
         }
