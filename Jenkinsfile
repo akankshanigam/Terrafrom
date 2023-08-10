@@ -24,7 +24,7 @@ pipeline {
 
         stage('Checkout') {
             when {
-                expression { return false }
+                expression { return true }
             }
             steps {
                 sh  'rm -rf Terrafrom'
@@ -34,7 +34,7 @@ pipeline {
         
         stage('Terraform Init') {
             when {
-                expression { return false }
+                expression { return true }
             }
             steps {
                 script {
@@ -60,7 +60,7 @@ pipeline {
             }
             steps {
                 script {
-                    sh 'terraform apply -auto-approve tfplan'
+                    sh "terraform apply -var 'credentials_file=$GOOGLE_CREDENTIALS' -auto-approve"
                 }
             }
         }
