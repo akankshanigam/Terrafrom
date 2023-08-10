@@ -9,7 +9,7 @@ pipeline {
     stages {
         stage('Install Terraform') {
             when {
-                expression { return false}
+                expression { return true}
             }
             steps {
                 script {
