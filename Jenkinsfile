@@ -60,7 +60,8 @@ pipeline {
             }
             steps {
                 script {
-                    sh "terraform apply -var 'credentials_file=$GOOGLE_CREDENTIALS' -auto-approve"
+                    sh "terraform apply -var 'credentials_file=${GCP_CRED}' -auto-approve"
+
                 }
             }
         }
