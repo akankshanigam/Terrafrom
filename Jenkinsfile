@@ -24,7 +24,7 @@ pipeline {
 
         stage('Checkout') {
             when {
-                expression { return false }
+                expression { return true }
             }
             steps {
                 sh 'rm -rf Terrafrom'
@@ -39,7 +39,7 @@ pipeline {
             steps {
                 script {
                     withCredentials([file(credentialsId: 'gcp_cred', variable: 'GCP_CRED')]) {
-                   
+                       
                         sh 'terraform init -backend-config=credentials="$GCP_CRED"'
                     } // Added closing brace
                 } // Added closing brace
@@ -52,8 +52,10 @@ pipeline {
             }
             steps {
                 script {
-                    sh "terraform plan -var 'credentials_file=credentials.json' -out=tfplan"
-                }
+                    withCredentials([file(credentialsId: 'gcp_cred', variable: 'GCP_CRED')]) {
+                        sh "terraform plan -var 'credentials_file=${GCP_CRED}' -out=tfplan"
+                    } // Added closing brace
+                } // Added closing brace
             }
         }
 
@@ -63,8 +65,8 @@ pipeline {
             }
             steps {
                 script {
-                     sh "terraform apply -auto-approve tfplan"
-                    
+                     sh 'cp $GCP_CRED credentials.json'
+                    sh 'terraform init -backend-config=credentials="credentials.json"'
                 }
             }
         }
