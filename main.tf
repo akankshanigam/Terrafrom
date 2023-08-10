@@ -1,5 +1,5 @@
 provider "google" {
-  credentials = file(var.credentials_file)
+  ccredentials = file("/var/jenkins_home/workspace/terrafrom_main/credentials.json")
   project     = "hadoop"
   region      = "us-central1"
 }
