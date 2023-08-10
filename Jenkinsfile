@@ -40,8 +40,8 @@ pipeline {
                 script {
                     withCredentials([file(credentialsId: 'gcp_cred', variable: 'GCP_CRED')]) {
                        
-                        sh 'terraform init -backend-config=credentials="$GCP_CRED"'
-                    } // Added closing brace
+                        sh 'cp $GCP_CRED credentials.json'
+                        sh 'terraform init -backend-config=credentials="credentials.json"'
                 } // Added closing brace
             }
         }
@@ -65,8 +65,8 @@ pipeline {
             }
             steps {
                 script {
-                     sh 'cp $GCP_CRED credentials.json'
-                    sh 'terraform init -backend-config=credentials="credentials.json"'
+                     sh "terraform apply -auto-approve tfplan"
+                    
                 }
             }
         }
