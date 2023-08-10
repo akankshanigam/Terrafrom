@@ -31,17 +31,7 @@ pipeline {
                 sh 'git clone https://github.com/akankshanigam/Terrafrom.git'
             }
         }
-        
-         stage('Setup Credentials') {
-            steps {
-                script {
-                    withCredentials([file(credentialsId: 'gcp_cred', variable: 'GCP_CRED')]) {
-                        sh "cp ${GCP_CRED} /var/jenkins_home/workspace/terrafrom_main/credentials.json"
-                    }
-                }
-            }
-        }
-        
+
         stage('Terraform Init') {
             when {
                 expression { return true }
@@ -75,7 +65,7 @@ pipeline {
             }
             steps {
                 script {
-                 sh 'terraform apply -auto-approve tfplan'
+                  sh 'terraform apply -auto-approve -var "credentials_file=${GCP_CRED}" tfplan'
                 }
             }
         }
