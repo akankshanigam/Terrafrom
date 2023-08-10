@@ -49,7 +49,7 @@ pipeline {
             }
             steps {
                 script {
-                    sh 'terraform plan -out=tfplan'
+                    sh "terraform plan -var 'credentials_file=${GCP_CRED}' -out=tfplan"
                 }
             }
         }
