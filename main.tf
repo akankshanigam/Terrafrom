@@ -13,7 +13,7 @@ variable "credentials_file" {
 resource "google_compute_instance" "default" {
   name         = "example-instance"
   machine_type = "n1-standard-1"
-  zone         = "us-central1-a"
+  zone         = "us-central1-b"
 
   boot_disk {
     initialize_params {
