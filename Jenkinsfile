@@ -9,7 +9,7 @@ pipeline {
     stages {
         stage('Install Terraform') {
             when {
-                expression { return true}
+                expression { return false}
             }
             steps {
                 script {
@@ -23,7 +23,7 @@ pipeline {
 
         stage('Checkout') {
             when {
-                expression { return false }
+                expression { return true }
             }
             steps {
                 sh 'git clone https://github.com/akankshanigam/Terrafrom.git'
@@ -32,7 +32,7 @@ pipeline {
         
         stage('Terraform Init') {
             when {
-                expression { return false }
+                expression { return true }
             }
             steps {
                 script {
@@ -43,7 +43,7 @@ pipeline {
         
         stage('Terraform Validate') {
             when {
-                expression { return false }
+                expression { return true }
             }
             steps {
                 script {
@@ -54,7 +54,7 @@ pipeline {
 
         stage('Terraform Apply') {
             when {
-                expression { return false }
+                expression { return true }
             }
             steps {
                 script {
