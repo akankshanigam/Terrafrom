@@ -1,5 +1,5 @@
 provider "google" {
-  credentials = file("${var.credentials_file}")
+  credentials = file(var.credentials_file)
   project     = "hadoop"
   region      = "us-central1"
 }
@@ -7,6 +7,7 @@ provider "google" {
 variable "credentials_file" {
   description = "Path to the GCP credentials JSON file"
   type        = string
+  default     = "${path.cwd}/credentials.json" // Default to the working directory
 }
 
 resource "google_compute_instance" "default" {
@@ -26,7 +27,6 @@ resource "google_compute_instance" "default" {
       // Ephemeral IP
     }
   }
-
 
   service_account {
     scopes = ["compute-ro", "view"]
