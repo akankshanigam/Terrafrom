@@ -32,6 +32,16 @@ pipeline {
             }
         }
         
+         stage('Setup Credentials') {
+            steps {
+                script {
+                    withCredentials([file(credentialsId: 'gcp_cred', variable: 'GCP_CRED')]) {
+                        sh "cp ${GCP_CRED} /var/jenkins_home/workspace/terrafrom_main/credentials.json"
+                    }
+                }
+            }
+        }
+        
         stage('Terraform Init') {
             when {
                 expression { return true }
