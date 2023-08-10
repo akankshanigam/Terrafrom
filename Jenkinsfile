@@ -25,7 +25,7 @@ pipeline {
 
         stage('Checkout') {
             when {
-                expression { return true }
+                expression { return false }
             }
             steps {
                 sh  'rm -rf Terrafrom'
@@ -35,7 +35,7 @@ pipeline {
         
         stage('Terraform Init') {
             when {
-                expression { return true }
+                expression { return false }
             }
             steps {
                 script {
