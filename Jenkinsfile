@@ -10,7 +10,7 @@ pipeline {
     stages {
         stage('Install Terraform') {
             when {
-                expression { return fakse }
+                expression { return false }
             }
             steps {
                 script {
