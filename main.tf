@@ -1,14 +1,9 @@
-data "aws_ami" "amazon_linux" {
-  most_recent = true
-  filter {
-    name   = "name"
-    values = ["amzn2-ami-hvm-*-x86_64-gp2"]
-  }
-  owners = ["amazon"]
+provider "aws" {
+  region = "eu-west-1"
 }
 
 resource "aws_instance" "example" {
-  ami           = data.aws_ami.amazon_linux.id
+  ami           = "ami-08a52ddb321b32a8c"
   instance_type = "t2.micro"
 
   tags = {
