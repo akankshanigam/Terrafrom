@@ -4,19 +4,21 @@ pipeline {
     environment {
         AWS_ACCESS_KEY_ID     = credentials('access_key')
         AWS_SECRET_ACCESS_KEY = credentials('secret_key')
+        PATH                  = "$PATH:$WORKSPACE/bin"
     }
 
     stages {
         stage('Install Terraform') {
             when {
-                expression { return true}
+                expression { return true }
             }
             steps {
                 script {
+                        sh 'mkdir -p $WORKSPACE/bin'
                         sh 'curl -o terraform.zip https://releases.hashicorp.com/terraform/1.0.4/terraform_1.0.4_linux_amd64.zip'
                         sh 'unzip -o terraform.zip terraform'
                         sh 'chmod +x terraform'
-                        sh 'sudo mv terraform /usr/local/bin/'
+                        sh 'mv terraform $WORKSPACE/bin/'
                 }
             }
         }
