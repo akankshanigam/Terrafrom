@@ -2,7 +2,7 @@ pipeline {
     agent any 
 
     environment {
-        GOOGLE_CREDENTIALS = credentials('gcp_cred')
+        GCP_CRED = credentials('gcp_cred')
         PATH                  = "$PATH:$WORKSPACE/bin"
     }
 
@@ -38,7 +38,7 @@ pipeline {
             }
             steps {
                 script {
-                    sh 'terraform init'
+                    sh 'terraform init -backend-config=credentials="$GCP_CRED"'
                 }
             }
         }
@@ -49,7 +49,7 @@ pipeline {
             }
             steps {
                 script {
-                    sh "terraform plan -var 'credentials_file=${GCP_CRED}' -out=tfplan"
+                   sh "terraform plan -var 'credentials_file=$GCP_CRED' -out=tfplan"
                 }
             }
         }
@@ -60,7 +60,7 @@ pipeline {
             }
             steps {
                 script {
-                    sh "terraform apply -var 'credentials_file=${GCP_CRED}' -auto-approve"
+                    sh "terraform apply -var 'credentials_file=$GCP_CRED' -auto-approve tfplan"
 
                 }
             }
