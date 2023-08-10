@@ -40,7 +40,7 @@ pipeline {
                 script {
                     withCredentials([file(credentialsId: 'gcp_cred', variable: 'GCP_CRED')]) {
                    
-                        sh 'terraform init -backend-config=credentials="credentials.json"'
+                        sh 'terraform init -backend-config=credentials="$GCP_CRED"'
                     } // Added closing brace
                 } // Added closing brace
             }
