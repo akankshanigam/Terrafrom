@@ -2,7 +2,7 @@ provider "aws" {
   region = "us-west-2" # You can change this to your preferred region
 }
 
-resource "aws_instance" "example" {
+resource "aws_instance" "test" {
   ami           = "ami-0c55b159cbfafe1f0" # Example Amazon Linux 2 LTS AMI
   instance_type = "t2.micro"
 
