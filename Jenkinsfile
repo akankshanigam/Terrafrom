@@ -24,7 +24,7 @@ pipeline {
 
         stage('Checkout') {
             when {
-                expression { return true }
+                expression { return false }
             }
             steps {
                 sh 'rm -rf Terrafrom'
@@ -49,10 +49,11 @@ pipeline {
             steps {
                 script {
                     withCredentials([file(credentialsId: 'gcp_cred', variable: 'GCP_CRED_FILE')]) {
-                        sh 'cp ${GCP_CRED_FILE} /var/jenkins_home/workspace/terrafrom_main/key.json'
-                        sh 'ls -l /var/jenkins_home/workspace/terrafrom_main' // Debugging step
+                            sh "cp ${GCP_CRED_FILE} ${WORKSPACE}/key.json"
+                          sh "ls -l ${WORKSPACE}" // Debugging step
+                        
             
-                        sh "cp ${GCP_CRED_FILE} key.json"
+                        
                     }
                 }
             }
