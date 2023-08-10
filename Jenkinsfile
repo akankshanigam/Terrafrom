@@ -50,7 +50,7 @@ pipeline {
             }
             steps {
                 script {
-                    sh 'terraform validate'
+                    sh 'terraform plan -out=tfplan'
                 }
             }
         }
@@ -61,7 +61,7 @@ pipeline {
             }
             steps {
                 script {
-                    sh 'terraform apply -auto-approve'
+                    sh 'terraform apply -auto-approve tfplan'
                 }
             }
         }
