@@ -28,9 +28,12 @@ pipeline {
                 expression { return true }
             }
             steps {
-                sh  'rm -rf Terrafrom.git'
-                sh 'git clone https://github.com/akankshanigam/Terrafrom.git'
-            }
+            checkout([
+                $class: 'GitSCM',
+                branches: [[name: '*/master']],
+                userRemoteConfigs: [[url: 'https://github.com/akankshanigam/Terrafrom.git']]
+            ])
+        }
         }
         
         stage('Terraform Init') {
