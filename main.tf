@@ -28,9 +28,13 @@ resource "google_compute_instance" "default" {
     }
   }
 
-  service_account {
-    scopes = ["compute-ro", "view"]
-  }
+service_account {
+  scopes = [
+    "https://www.googleapis.com/auth/compute",
+    "https://www.googleapis.com/auth/devstorage.read_write"
+  ]
+}
+
 
   tags = ["web", "prod"]
 }
