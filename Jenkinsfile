@@ -2,15 +2,14 @@ pipeline {
     agent any 
 
     environment {
-        AWS_ACCESS_KEY_ID     = credentials('access_key')
-        AWS_SECRET_ACCESS_KEY = credentials('secret_key')
+        GOOGLE_CREDENTIALS = credentials('gcp_cred')
         PATH                  = "$PATH:$WORKSPACE/bin"
     }
 
     stages {
         stage('Install Terraform') {
             when {
-                expression { return false }
+                expression { return false}
             }
             steps {
                 script {
