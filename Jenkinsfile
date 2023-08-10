@@ -65,6 +65,7 @@ pipeline {
             }
             steps {
                 script {
+                  sh 'cp ${GCP_CRED_FILE} credentials.json'
                   sh 'terraform apply -auto-approve tfplan'
                 }
             }
