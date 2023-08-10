@@ -13,10 +13,10 @@ pipeline {
             }
             steps {
                 script {
-                    sh 'curl -o terraform.zip https://releases.hashicorp.com/terraform/1.0.4/terraform_1.0.4_linux_amd64.zip'
-                    sh 'unzip terraform.zip'
-                    sh 'chmod +x terraform'
-                    sh 'sudo mv terraform /usr/local/bin/'
+                        sh 'curl -o terraform.zip https://releases.hashicorp.com/terraform/1.0.4/terraform_1.0.4_linux_amd64.zip'
+                        sh 'unzip -o terraform.zip terraform'
+                        sh 'chmod +x terraform'
+                        sh 'sudo mv terraform /usr/local/bin/'
                 }
             }
         }
