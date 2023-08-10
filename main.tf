@@ -1,13 +1,41 @@
 provider "aws" {
-  region = "us-west-1"  # Change this to your desired AWS region
+  region = "us-west-2"
 }
 
-resource "aws_instance" "example_instance" {
-  ami           = "ami-0c55b159cbfafe1f0"  # Specify the AMI ID for your desired instance type and region
+data "aws_ami" "amazon_linux" {
+  most_recent = true
+  filter {
+    name   = "name"
+    values = ["amzn2-ami-hvm-*-x86_64-gp2"]
+  }
+  owners = ["amazon"] # This owner ID corresponds to Amazon's
+}
+
+resource "aws_instance" "my_instance" {
+  ami           = data.aws_ami.amazon_linux.id
   instance_type = "t2.micro"
-  key_name      = "your_key_pair_name"  # Replace with the name of your EC2 key pair
+
+  key_name    = aws_key_pair.my_key.key_name
+  vpc_security_group_ids = [aws_security_group.my_sg.id]
+
+  tags = {
+    Name = "MyInstance"
+  }
 }
 
-output "instance_ip" {
-  value = aws_instance.example_instance.public_ip
+resource "aws_key_pair" "my_key" {
+  key_name   = "my-key"
+  public_key = file("~/.ssh/id_rsa.pub")
+}
+
+resource "aws_security_group" "my_sg" {
+  name        = "my_sg"
+  description = "Allow inbound traffic"
+
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
 }
