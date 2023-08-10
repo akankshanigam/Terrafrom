@@ -3,21 +3,21 @@ pipeline {
 
     environment {
         GCP_CRED = credentials('gcp_cred')
-        PATH                  = "$PATH:$WORKSPACE/bin"
+        PATH = "$PATH:$WORKSPACE/bin"
     }
 
     stages {
         stage('Install Terraform') {
             when {
-                expression { return false}
+                expression { return false }
             }
             steps {
                 script {
-                        sh 'mkdir -p $WORKSPACE/bin'
-                        sh 'curl -o terraform.zip https://releases.hashicorp.com/terraform/1.0.4/terraform_1.0.4_linux_amd64.zip'
-                        sh 'unzip -o terraform.zip terraform'
-                        sh 'chmod +x terraform'
-                        sh 'mv terraform $WORKSPACE/bin/'
+                    sh 'mkdir -p $WORKSPACE/bin'
+                    sh 'curl -o terraform.zip https://releases.hashicorp.com/terraform/1.0.4/terraform_1.0.4_linux_amd64.zip'
+                    sh 'unzip -o terraform.zip terraform'
+                    sh 'chmod +x terraform'
+                    sh 'mv terraform $WORKSPACE/bin/'
                 }
             }
         }
@@ -27,7 +27,7 @@ pipeline {
                 expression { return true }
             }
             steps {
-                sh  'rm -rf Terrafrom'
+                sh 'rm -rf Terrafrom'
                 sh 'git clone https://github.com/akankshanigam/Terrafrom.git'
             }
         }
@@ -39,8 +39,9 @@ pipeline {
             steps {
                 script {
                     withCredentials([file(credentialsId: 'gcp_cred', variable: 'GCP_CRED')]) {
-                       sh "terraform plan -var 'credentials_file=${GCP_CRED}' -out=tfplan"
-                }
+                        sh "terraform plan -var 'credentials_file=${GCP_CRED}' -out=tfplan"
+                    } // Added closing brace
+                } // Added closing brace
             }
         }
         
@@ -50,9 +51,10 @@ pipeline {
             }
             steps {
                 script {
-                   withCredentials([file(credentialsId: 'gcp_cred', variable: 'GCP_CRED')]) {
-                sh "terraform apply -var 'credentials_file=${GCP_CRED}' -auto-approve tfplan"
-                }
+                    withCredentials([file(credentialsId: 'gcp_cred', variable: 'GCP_CRED')]) {
+                        sh "terraform apply -var 'credentials_file=${GCP_CRED}' -auto-approve tfplan"
+                    } // Added closing brace
+                } // Added closing brace
             }
         }
 
@@ -63,7 +65,6 @@ pipeline {
             steps {
                 script {
                     sh "terraform apply -var 'credentials_file=$GCP_CRED' -auto-approve tfplan"
-
                 }
             }
         }
