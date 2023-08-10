@@ -28,6 +28,7 @@ pipeline {
                 expression { return true }
             }
             steps {
+                sh ' rm -rf Terrafrom.git
                 sh 'git clone https://github.com/akankshanigam/Terrafrom.git'
             }
         }
