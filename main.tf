@@ -10,23 +10,56 @@ variable "credentials_file" {
   default     = "/var/jenkins_home/workspace/terrafrom_main/credentials.json" // Default to the working directory
 }
 
+provider "google" {
+  credentials = file("<YOUR-GCP-JSON-KEY-PATH>")
+  project     = "<YOUR-GCP-PROJECT-ID>"
+  region      = "us-central1"
+}
+
+// Generate an SSH key
+resource "tls_private_key" "example" {
+  algorithm = "RSA"
+}
+
+// Create multiple GCP instances without public IP and with the generated SSH key
 resource "google_compute_instance" "default" {
-  name         = "example-instance"
-  machine_type = "n1-standard-1"
-  zone = "us-west1-a"
+  count        = 3 // Change this to however many instances you want
+  name         = "vm-instance-${count.index}"
+  machine_type = "f1-micro"
+  zone         = "us-central1-a"
+
+  tags = ["foo", "bar"]
 
   boot_disk {
     initialize_params {
-      image = "centos-cloud/centos-7"
+      image = "debian-cloud/debian-10"
     }
   }
 
   network_interface {
     network = "default"
+
+    // This makes sure no public IP is assigned
     access_config {
-      // Ephemeral IP
+      // empty block
     }
   }
+
+  metadata = {
+    ssh-keys = "terraform:${tls_private_key.example.public_key_openssh}"
+  }
+}
+
+// Output the private and public keys
+output "private_key" {
+  value = tls_private_key.example.private_key_pem
+  sensitive = true
+}
+
+output "public_key" {
+  value = tls_private_key.example.public_key_openssh
+}
+
 
 service_account {
   scopes = [
