@@ -1,34 +1,13 @@
 provider "google" {
-  credentials = file("/var/jenkins_home/workspace/terrafrom_main/key.json")
+  credentials = file("/Users/dilipnigam/Downloads/key.json")
   project     = "terrafrom1"
   region      = "us-central1"
 }
 
-variable "credentials_file" {
-  description = "Path to the GCP credentials JSON file"
-  type        = string
-  default     = "/var/jenkins_home/workspace/terrafrom_main/credentials.json" // Default to the working directory
-}
-
-provider "google" {
-  credentials = file("<YOUR-GCP-JSON-KEY-PATH>")
-  project     = "<YOUR-GCP-PROJECT-ID>"
-  region      = "us-central1"
-}
-
-// Generate an SSH key
-resource "tls_private_key" "example" {
-  algorithm = "RSA"
-}
-
-// Create multiple GCP instances without public IP and with the generated SSH key
-resource "google_compute_instance" "default" {
-  count        = 3 // Change this to however many instances you want
-  name         = "vm-instance-${count.index}"
-  machine_type = "f1-micro"
-  zone         = "us-central1-a"
-
-  tags = ["foo", "bar"]
+resource "google_compute_instance" "jenkins" {
+  name         = "jenkins-instance"
+  machine_type = "n1-standard-2"
+  zone         = "us-central1-b"
 
   boot_disk {
     initialize_params {
@@ -38,36 +17,33 @@ resource "google_compute_instance" "default" {
 
   network_interface {
     network = "default"
-
-    // This makes sure no public IP is assigned
-    access_config {
-      // empty block
-    }
+    // No access_config block means no external IP
   }
 
   metadata = {
-    ssh-keys = "terraform:${tls_private_key.example.public_key_openssh}"
+    ssh-keys = "YOUR_SSH_USERNAME:${file("~/.ssh/id_rsa.pub")}"
+  }
+
+  tags = ["jenkins", "web"]
+
+  service_account {
+    scopes = [
+      "userinfo-email",
+      "compute-ro",
+      "storage-ro",
+    ]
   }
 }
 
-// Output the private and public keys
-output "private_key" {
-  value = tls_private_key.example.private_key_pem
-  sensitive = true
-}
+resource "google_compute_firewall" "jenkins" {
+  name    = "jenkins-firewall"
+  network = "default"
 
-output "public_key" {
-  value = tls_private_key.example.public_key_openssh
-}
+  allow {
+    protocol = "tcp"
+    ports    = ["22", "8080"]
+  }
 
-
-service_account {
-  scopes = [
-    "https://www.googleapis.com/auth/compute",
-    "https://www.googleapis.com/auth/devstorage.read_write"
-  ]
-}
-
-
-  tags = ["web", "prod"]
+  source_ranges = ["0.0.0.0/0"]
+  target_tags   = ["jenkins"]
 }
