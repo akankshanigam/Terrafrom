@@ -24,7 +24,7 @@ pipeline {
 
         stage('Checkout') {
             when {
-                expression { return false }
+                expression { return true }
             }
             steps {
                // sh 'rm -rf Terrafrom'
