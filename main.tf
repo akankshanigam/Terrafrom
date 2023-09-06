@@ -1,5 +1,5 @@
 provider "google" {
-  credentials = file("/Users/dilipnigam/Downloads/key.json")
+  credentials = file("/var/jenkins_home/workspace/key.json")
   project     = "terrafrom1"
   region      = "us-central1"
 }
